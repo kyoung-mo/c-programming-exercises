@@ -1,3 +1,16 @@
+# [2주차: 포인터와 메모리 관리 (Memory & Pointers)]
+## Day 8. 안전한 Memcpy 구현 (Overlap 처리)
+- **출력:** 메모리 복사 후 목적지 주소의 데이터 덤프
+- **입력:** 소스 주소, 목적지 주소, 복사할 바이트 수
+- **제약조건:** `memcpy` 대신 `memmove` 동작 구현 (src와 dest 영역이 겹칠 때 데이터 오염 방지).
+- **실행결과:** `Overlap handled correctly.`
+
+---
+
+
+### 코드
+
+```c
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -59,3 +72,18 @@ int main(){
 
     return 0;
 }
+```
+
+### 실행 결과
+
+```bash
+src 바이트: 0x0001116F
+dest 바이트: 0x00040001
+*src : Result   Hex: 0x1116F | Bin: 0000 0000 0000 0001 0001 0001 0110 1111
+
+src 바이트: 0001116f
+dest 바이트: 0x0001116F
+*dest : Result   Hex: 0x1116F | Bin: 0000 0000 0000 0001 0001 0001 0110 1111
+
+[1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-4lt3zj1c.opv" 1>"/tmp/Microsoft-MIEngine-Out-0a53ylnp.nxn”
+```
