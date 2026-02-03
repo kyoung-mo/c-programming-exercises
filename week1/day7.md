@@ -1,3 +1,32 @@
+# [1주차: 비트 연산과 데이터 표현 (Bitwise & Data)]
+## Day 7. Checksum 계산 (XOR 방식) LCR <⇒ CRC
+- **입력:** 바이트 배열  payload`[`0x10, 0x20, 0x30, 0x40`]`, 길이, ID
+- **출력:** XOR 누적 체크섬 값
+- **제약조건:** 포인터 연산 사용.
+- **실행결과:**
+
+```c
+=== Day 7: XOR Checksum Calculation ===
+
+[TX] Sending Packet...
+     Data: 0x01 0x04 0x10 0x20 0x30 0x40 
+     Calculated Checksum: 0x04
+
+[RX] Receiving Normal Packet...
+     >> Verification SUCCESS (Result: 0x00)
+
+[RX] Receiving Corrupted Packet (Noise injected)...
+     Corrupted Data: 0x01 0x04 0xEF 0x20 0x30 0x40 0x04 
+     >> Verification FAIL (Result: 0xFF)
+     >> Error detected! Discarding packet.
+```
+
+---
+
+
+### 코드
+
+```c
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -85,3 +114,23 @@ int main() {
     
     return 0;
 }
+```
+
+### 실행 결과
+
+```bash
+=== Day 7: XOR Checksum Calculation ===
+
+[TX] Sending Packet...
+Data: 0x01 0x04 0x10 0x20 0x30 0x40
+Calculated Checksum: 0x40
+
+[RX] Receiving Normal Packet...
+>> Verification SUCCESS (Result: 0x00)
+
+[RX] Receiving Corrupted Packet (Noise injected)...
+Corrupted Data: 0x01 0x04 0x10 0x20 0xCF 0x40
+>> Verification FAIL (Result: 0xFF)
+>> Error detected! Discarding packet.
+[1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-f25pmq5w.rge" 1>"/tmp/Microsoft-MIEngine-Out-z3wfdgoy.x2a”
+```
