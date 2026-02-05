@@ -26,6 +26,7 @@ Allocating again (expecting index 2)...
 >> Index 2 allocated. (Byte 0, Bit 2 set)
 [Bitmap Visual] 11111111 | 00000000 | 0000
 ```
+<img width="1200" height="600" alt="image" src="https://github.com/user-attachments/assets/57ea8088-a3e4-42af-972d-79250803e3dc" />
 
 ---
 
