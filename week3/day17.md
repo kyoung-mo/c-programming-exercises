@@ -3,7 +3,7 @@
 - **입력:** 관리할 리소스 개수(예: 100개), 할당/해제 요청
 - **출력:** 할당된 인덱스 번호
 - **제약조건:** `uint8_t` 배열을 비트 단위로 쪼개서 사용 여부 마킹 (1bit = 1resource).
-- **실행결과:**
+- **실행결과:**  ⇒ 화면에는 3개정도만 보여준다. 
 
 ```c
 === Day 17: Bitmap Manager ===
@@ -16,15 +16,15 @@
 >> Index 5 allocated. (Byte 0, Bit 5 set)
 >> Index 6 allocated. (Byte 0, Bit 6 set)
 >> Index 7 allocated. (Byte 0, Bit 7 set)
-[Bitmap Visual] 11111111 | 00000000 | 0000
+[Bitmap Visual] 11111111 | 00000000 | 00000000
 
 Freeing index 2...
 >> Index 2 freed. (Byte 0, Bit 2 cleared)
-[Bitmap Visual] 11011111 | 00000000 | 0000
+[Bitmap Visual] 11011111 | 00000000 | 00000000
 
 Allocating again (expecting index 2)...
 >> Index 2 allocated. (Byte 0, Bit 2 set)
-[Bitmap Visual] 11111111 | 00000000 | 0000
+[Bitmap Visual] 11111111 | 00000000 | 00000000
 ```
 <img width="1200" height="600" alt="image" src="https://github.com/user-attachments/assets/57ea8088-a3e4-42af-972d-79250803e3dc" />
 
