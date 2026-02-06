@@ -8,7 +8,7 @@
 ```c
 === Day 18: Task Scheduler (Min Heap) ===
 
-Tasks pushed: (1, 50), (2, 10), (3, 5), (5, 0), (4, 100)
+Tasks pushed: (1, 50), (2, 10), (3, 5), (4, 100), (5, 0)
 Processing Tasks...
 
 >> Executing Task 5 (Priority 0)
