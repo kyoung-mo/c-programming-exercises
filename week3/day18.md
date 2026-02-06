@@ -17,7 +17,6 @@ Processing Tasks...
 >> Executing Task 1 (Priority 50)
 >> Executing Task 4 (Priority 100)
 ```
-<img width="1200" height="600" alt="image" src="https://github.com/user-attachments/assets/57ea8088-a3e4-42af-972d-79250803e3dc" />
 
 ---
 
