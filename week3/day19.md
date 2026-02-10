@@ -29,11 +29,80 @@ Limit: 4096, Used: 4113
 ### 코드
 
 ```c
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 
+#define SOFT_LIMIT 4096
+#define CANARY_VALUE 0xDEADBEEF
+
+static uint8_t *base_ptr = NULL;
+
+int stack_usage(){
+    volatile uint8_t buffer[512];
+    volatile uint32_t canary = CANARY_VALUE;
+    uint8_t local;
+
+    int used = (int)(base_ptr - &local);
+    if(used < 0) used = -used;
+
+    printf("Current Stack Usage: %d bytes\n", used);
+
+    if(canary != CANARY_VALUE){
+        printf("[CANARY CORRUPTED!] Stack integrity compromised!\n");
+    }
+
+    if(used >= SOFT_LIMIT){
+        return used;
+    }
+
+    return stack_usage();
+}
+
+int main(){
+
+    int used_byte=0;
+    uint8_t start_address;
+    base_ptr = &start_address;
+
+    printf("=== Day 19: Stack Overflow Detection (Canary Simulation) ===\n");
+    printf("Stack Base Address: %p\n",(void*)&start_address);
+    printf("Soft Limit: %d bytes\n\n",SOFT_LIMIT);
+
+    while(1){
+        used_byte = stack_usage();
+        if(used_byte>=SOFT_LIMIT) {
+            printf("[!!! WARNING !!!] Stack Overflow Detected!\n");
+            printf("Limit: %d, Used: %d\n\n",SOFT_LIMIT, used_byte);
+
+            printf(">> System survived. Returned safely to main.\n");
+            break;
+        }
+    }
+
+    return 0;
+}
 ```
 
 ### 실행 결과
 
 ```bash
+=== Day 19: Stack Overflow Detection (Canary Simulation) ===
+Stack Base Address: 0x7fffffffdd03
+Soft Limit: 4096 bytes
 
+Current Stack Usage: 556 bytes
+Current Stack Usage: 1116 bytes
+Current Stack Usage: 1676 bytes
+Current Stack Usage: 2236 bytes
+Current Stack Usage: 2796 bytes
+Current Stack Usage: 3356 bytes
+Current Stack Usage: 3916 bytes
+Current Stack Usage: 4476 bytes
+[!!! WARNING !!!] Stack Overflow Detected!
+Limit: 4096, Used: 4476
+
+>> System survived. Returned safely to main.
+[1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-mt04k1rc.2fq" 1>"/tmp/Microsoft-MIEngine-Out-2xf0jfqj.gxo”
 ```
