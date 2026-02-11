@@ -44,7 +44,7 @@ typedef struct Matrix{ // 출력에 사용
 }Sparse_Matrix;
 
 int sparse_matrix[ROW][COL]={0};
-void print_matrix();
+//void print_matrix();
 void input_value(int row, int col, int value);
 int save_compressed_matrix();
 void memory_analysis(int index);
@@ -114,8 +114,8 @@ int save_compressed_matrix(){
 }
 
 void memory_analysis(int index){
-    printf("Original Matrix Size : %d bytes (%d x %d ints)\n",ROW*COL,ROW,COL);
-    printf("Compressed Data Size : %d bytes (%d elements x3 x %d bytes)\n",3*index,index,sizeof(int));
+    printf("Original Matrix Size : %d bytes (%d x %d x 4 bytes)\n",sizeof(int)*ROW*COL,ROW,COL);
+    printf("Compressed Data Size : %d bytes (%d elements x 3 x %d bytes)\n",3*sizeof(int)*index,index,sizeof(int));
     printf(">> Compression Ratio : %.1lf%% of original size\n",(3*(double)index)/(ROW*COL)*100);
 }
 ```
@@ -132,8 +132,8 @@ void memory_analysis(int index){
 [index 3] row = 5, col = 1, value = 9
 
 [Memory Usage Analysis]
-Original Matrix Size : 400 bytes (100 x 4 ints)
-Compressed Data Size : 12 bytes (4 elements x3 x 4 bytes)
+Original Matrix Size : 1600 bytes (100 x 4 x 4 bytes)
+Compressed Data Size : 48 bytes (4 elements x 3 x 4 bytes)
 >> Compression Ratio : 3.0% of original size
-[1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-v1jvm4f0.kox" 1>"/tmp/Microsoft-MIEngine-Out-irpncnqe.wz2”
+[1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-wlqtgxhg.evm" 1>"/tmp/Microsoft-MIEngine-Out-i2pvcsxw.0v1”
 ```
