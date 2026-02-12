@@ -57,11 +57,135 @@ Initial State: [IDLE]
 ### 코드
 
 ```c
+#include <stdio.h>
+#include <string.h>
 
+/* States */
+enum { IDLE, RUN, ERROR, NUM_STATES };
+
+/* Events */
+enum { EVT_BUTTON_PRESS, EVT_TIMEOUT, EVT_RESET, NUM_EVENTS };
+
+/* State/Event name strings */
+const char *state_names[] = { "IDLE", "RUN", "ERROR" };
+const char *event_names[] = { "EVT_BUTTON_PRESS", "EVT_TIMEOUT", "EVT_RESET" };
+
+/*
+  제약조건: switch-case 대신 상태별 함수 포인터 테이블 사용
+
+  전이 규칙:
+  IDLE  -> RUN   (EVT_BUTTON_PRESS)
+  RUN   -> IDLE  (EVT_TIMEOUT)
+  RUN   -> ERROR (EVT_RESET)
+  ERROR -> IDLE  (EVT_RESET)
+*/
+
+/* === 상태별 액션 함수 === */
+void action_idle(void) {
+}
+
+void action_run(void) {
+    printf("   (Running... Motor spinning ⚙️)\n");
+}
+
+void action_error(void) {
+    printf("   (Waiting... ⚠️ System Halted)\n");
+}
+
+/* === 함수 포인터 테이블: 상태 진입 시 액션 === */
+void (*state_actions[NUM_STATES])(void) = {
+    action_idle,
+    action_run,
+    action_error
+};
+
+/* === 전이 테이블: [현재상태][이벤트] = 다음상태 (-1 = 무효) === */
+int transition_table[NUM_STATES][NUM_EVENTS] = {
+    /* IDLE  */ { RUN,  -1,   -1    },
+    /* RUN   */ { -1,   IDLE, ERROR },
+    /* ERROR */ { -1,   -1,   IDLE  }
+};
+
+/* === FSM 구조체 === */
+typedef struct {
+    int current_state;
+} FSM;
+
+void fsm_init(FSM *fsm) {
+    fsm->current_state = IDLE;
+}
+
+int fsm_handle_event(FSM *fsm, int event) {
+    int next = transition_table[fsm->current_state][event];
+    if (next == -1) {
+        printf("[INVALID] No transition from %s on %s\n",
+               state_names[fsm->current_state], event_names[event]);
+        return -1;
+    }
+
+    printf("--------------------------------------------------\n");
+    printf("[TRANSITION] %s --(%s)--> %s\n",
+           state_names[fsm->current_state], event_names[event], state_names[next]);
+    printf("--------------------------------------------------\n");
+
+    fsm->current_state = next;
+    state_actions[next]();
+
+    return 0;
+}
+
+int main(){
+    FSM fsm;
+    fsm_init(&fsm);
+
+    printf("=== Day 21: Visual FSM Implementation ===\n");
+    printf("Initial State: [IDLE]\n\n");
+
+    /* 시뮬레이션 이벤트 시퀀스 */
+    int events[] = {
+        EVT_BUTTON_PRESS,   /* IDLE  -> RUN   */
+        EVT_TIMEOUT,         /* RUN   -> IDLE  */
+        EVT_BUTTON_PRESS,   /* IDLE  -> RUN   */
+        EVT_RESET,           /* RUN   -> ERROR */
+        EVT_RESET            /* ERROR -> IDLE  */
+    };
+    int num_events = sizeof(events) / sizeof(events[0]);
+
+    for (int i = 0; i < num_events; i++) {
+        fsm_handle_event(&fsm, events[i]);
+    }
+
+    printf("\n>> Simulation Ended.\n");
+
+    return 0;
+}
 ```
 
 ### 실행 결과
 
 ```bash
+=== Day 21: Visual FSM Implementation ===
+Initial State: [IDLE]
 
+--------------------------------------------------
+[TRANSITION] IDLE --(EVT_BUTTON_PRESS)--> RUN
+--------------------------------------------------
+(Running... Motor spinning ⚙️)
+--------------------------------------------------
+[TRANSITION] RUN --(EVT_TIMEOUT)--> IDLE
+--------------------------------------------------
+--------------------------------------------------
+[TRANSITION] IDLE --(EVT_BUTTON_PRESS)--> RUN
+--------------------------------------------------
+(Running... Motor spinning ⚙️)
+--------------------------------------------------
+[TRANSITION] RUN --(EVT_RESET)--> ERROR
+--------------------------------------------------
+(Waiting... ⚠️ System Halted)
+--------------------------------------------------
+[TRANSITION] ERROR --(EVT_RESET)--> IDLE
+--------------------------------------------------
+
+>> Simulation Ended.
+[1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-cq0sbg1x.q4o" 1>"/tmp/Microsoft-MIEngine-Out-r4y5sajb.1sn”
 ```
