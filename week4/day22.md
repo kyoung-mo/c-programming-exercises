@@ -1,4 +1,4 @@
-# [4주차: 알고리즘 및 시스템 모사 (Algorithms & System)]
+# [4주차: 알고리즘 및 시스템 모사 (Algorithms & System)] - 다시 풀 것
 ## Day 22. 소프트웨어 타이머 (Linked List 기반)
 - **입력:** `SetTimer(ID, ms)`, `Tick()` 주기적 호출
 - **출력:** 시간 만료 시 콜백 함수 실행
@@ -54,7 +54,58 @@ All timers cleared.
 ### 코드
 
 ```c
+#include <stdio.h>
 
+typedef struct timer_info
+{
+    int timer_id;
+    int timer_delta;
+    char* link;
+
+}DeltaTime;
+
+DeltaTime* delta_timer;
+char* head;
+
+DeltaTime* SetTimer(int ID,int ms)
+{
+    head=delta_timer;
+    printf("%0x\n\n",head);
+    int total_ms=0;
+    printf("Timer %d set (%d ms) [Inserted at HEAD]\n",ID,ms,total_ms);
+    printf("[Timer List] (ID:1, dt:10, total:10) -> NULL\n",ID, ms, total_ms);
+}
+
+void timer_list()
+{
+}
+
+int main()
+{
+
+
+    printf("=== Day 22: Software Timer (Delta List) ===\n\n");
+    
+    SetTimer(1,10);
+    SetTimer(2,5);
+    SetTimer(3,5);
+
+    printf(">> Start Ticking...\n");
+
+    printf("Tick 1: Rem Head dt: 4\n");
+    printf("Tick 4: Rem Head dt: 1\n");
+    
+    prinf("Tick 5: >> [Event] Timer 2 expired! Action executed.\n");
+    printf("Rem Head dt: 5");
+
+    printf("Tick 6: Rem Head dt: 4\n");
+    printf("Tick 9: Rem Head dt: 1\n");
+
+    prinf("Tick 5: >> [Event] Timer 2 expired! Action executed.\n");
+    printf("Rem Head dt: 5");
+
+    return 0;
+}
 ```
 
 ### 실행 결과
